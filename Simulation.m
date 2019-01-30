@@ -4,6 +4,8 @@ close all;
 clc;
 
 
+dt = 0.01;
+
 % create the video writer with 1 fps
 writerObj = VideoWriter('my_video1.avi');
 writerObj.FrameRate = 30;
@@ -14,7 +16,6 @@ open(writerObj);
 
 N=10000; % Number of frames
 
-dt = 0.01;
 %% Ownship initialisation
 initialLocation = [0,0,0];
 V_u = 40;

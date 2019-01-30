@@ -120,17 +120,17 @@ classdef UAV < handle
             %             tc = [xcord, ycord] + obj.TurnCircle;
             %             oc = [xcord, ycord] + obj.OppositeCircle;
             if  obj.TC && obj.OC 
-                rectangle('Position',[obj.TurnCircle(1)- obj.turnRadius, obj.TurnCircle(2) - obj.turnRadius, 2*obj.turnRadius, 2*obj.turnRadius], 'FaceColor',[0 .5 .5],'Curvature',[1,1])
-                rectangle('Position',[obj.OppositeCircle(1)- obj.turnRadius, obj.OppositeCircle(2)- obj.turnRadius, 2*obj.turnRadius, 2*obj.turnRadius],'FaceColor',[0 .5 .5], 'Curvature',[1,1])
+                rectangle('Position',[obj.TurnCircle(1)- obj.turnRadius/2, obj.TurnCircle(2) - obj.turnRadius, 2*obj.turnRadius, 2*obj.turnRadius], 'FaceColor',[0 .5 .5],'Curvature',[1,1])
+                rectangle('Position',[obj.OppositeCircle(1)- obj.turnRadius/2, obj.OppositeCircle(2)- obj.turnRadius, 2*obj.turnRadius, 2*obj.turnRadius],'FaceColor',[0 .5 .5], 'Curvature',[1,1])
             elseif ~obj.TC && obj.OC && obj.SS
-                rectangle('Position',[obj.TurnCircle(1)- obj.turnRadius, obj.TurnCircle(2)- obj.turnRadius, obj.turnRadius, obj.turnRadius], 'FaceColor',[0 .1 .1],'Curvature',[1,1])
-                rectangle('Position',[obj.OppositeCircle(1)- obj.turnRadius, obj.OppositeCircle(2)- obj.turnRadius, 2*obj.turnRadius, 2*obj.turnRadius],'FaceColor',[0 .1 .1], 'Curvature',[1,1])
+                rectangle('Position',[obj.TurnCircle(1)- obj.turnRadius/2, obj.TurnCircle(2)- obj.turnRadius/2, obj.turnRadius, obj.turnRadius], 'FaceColor',[0 .1 .1],'Curvature',[1,1])
+                rectangle('Position',[obj.OppositeCircle(1)- obj.turnRadius/2, obj.OppositeCircle(2)- obj.turnRadius/2, 2*obj.turnRadius, 2*obj.turnRadius],'FaceColor',[0 .1 .1], 'Curvature',[1,1])
             elseif obj.OC 
-                rectangle('Position',[obj.TurnCircle(1)- obj.turnRadius, obj.TurnCircle(2)- obj.turnRadius, 2*obj.turnRadius, 2*obj.turnRadius],'Curvature',[1,1])
-                rectangle('Position',[obj.OppositeCircle(1)- obj.turnRadius, obj.OppositeCircle(2)- obj.turnRadius, 2*obj.turnRadius, 2*obj.turnRadius], 'FaceColor',[0 .5 .5], 'Curvature',[1,1])
+                rectangle('Position',[obj.TurnCircle(1)- obj.turnRadius/2, obj.TurnCircle(2)- obj.turnRadius/2, 2*obj.turnRadius, 2*obj.turnRadius],'Curvature',[1,1])
+                rectangle('Position',[obj.OppositeCircle(1)- obj.turnRadius/2, obj.OppositeCircle(2)- obj.turnRadius/2, 2*obj.turnRadius, 2*obj.turnRadius], 'FaceColor',[0 .5 .5], 'Curvature',[1,1])
             else
-                rectangle('Position',[obj.TurnCircle(1)- obj.turnRadius, obj.TurnCircle(2)- obj.turnRadius, 2*obj.turnRadius, 2*obj.turnRadius],'Curvature',[1,1])
-                rectangle('Position',[obj.OppositeCircle(1)- obj.turnRadius, obj.OppositeCircle(2)- obj.turnRadius, 2*obj.turnRadius, 2*obj.turnRadius], 'Curvature',[1,1])
+                rectangle('Position',[obj.TurnCircle(1)- obj.turnRadius/2, obj.TurnCircle(2)- obj.turnRadius/2, 2*obj.turnRadius, 2*obj.turnRadius],'Curvature',[1,1])
+                rectangle('Position',[obj.OppositeCircle(1)- obj.turnRadius/2, obj.OppositeCircle(2)- obj.turnRadius/2, 2*obj.turnRadius, 2*obj.turnRadius], 'Curvature',[1,1])
             end
             
         end
