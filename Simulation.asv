@@ -7,7 +7,7 @@ clc;
 dt = 0.01;
 
 % create the video writer with 1 fps
-writerObj = VideoWriter('ModelAnimation.avi');
+writerObj = VideoWriter('my_video1.avi');
 writerObj.FrameRate = 30;
 % set the seconds per image
 
@@ -38,7 +38,7 @@ intruder = obstacle(initLocation, avoidanceRadius, V_a, ObsHeading, ObsFlightCOu
 
 %% Run Simulation 
 i = 1;
-set(gcf,'position',[10,10,800,750])
+line([)
 while abs(WP_1(1) - ownship.x) > 5 && abs(WP_1(2) - ownship.y) > 5
 
     stateMachine(ownship.TC, ownship.OC, ownship.SS, ownship, intruder, dt); 
@@ -46,7 +46,6 @@ while abs(WP_1(1) - ownship.x) > 5 && abs(WP_1(2) - ownship.y) > 5
     if mod(ownship.step, 5) == 0 
         ownship.dynamicPlot2D();
         hold on
-        line([WP_0(1), WP_1(1)], [WP_0(2), WP_1(2)], 'Color','red','LineStyle','--')
         intruder.staticPlot2D();
         xlim([-100, 900]);
         ylim([-100, 900]);

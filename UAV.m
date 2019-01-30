@@ -48,9 +48,9 @@ classdef UAV < handle
             headingVector = [cos(obj.heading), sin(obj.heading)];
             posVector = [obstacle.x, obstacle.y] - [obj.x, obj.y];
             beta = acos(dot(headingVector, posVector)/(norm(headingVector)*norm(posVector)));
-            
-            obj.TC = distanceTC < obstacle.avoidanceRadius && beta < pi/2;
-            obj.OC = distanceOC < obstacle.avoidanceRadius;
+
+            obj.TC = distanceTC < obstacle.avoidanceRadius + obj.turnRadius && beta < pi/2;
+            obj.OC = distanceOC < obstacle.avoidanceRadius + obj.turnRadius;
             
             % y = -(a/b)*x - c/b
             % c = y - mx
@@ -59,11 +59,19 @@ classdef UAV < handle
             c = -(obj.waypoint1(2) + (a/b)*obj.waypoint1(1));
             perpDistance = (a*obstacle.x  + b*obstacle.y + c)/norm([a,b]);
             distanceTC =  (a*obj.TurnCircle(1)  + b*obj.TurnCircle(2) + c)/norm([a,b]);
-            obj.SS = sign(distanceTC)*(abs(distanceTC) - obj.turnRadius) == sign(perpDistance);
+            obj.SS = sign(sign(distanceTC)*(abs(distanceTC) - obj.turnRadius)) == -sign(perpDistance);
             
             obj.dir = sign(perpDistance);
             
             obj.states(:, obj.step) = [obj.TC; obj.OC; obj.SS];
+        end
+        
+        function moveToWayPoint(obj, dt, obstacle)
+            wpVector = [obj.waypoint1(1) - obj.x, obj.waypoint1(2) - obj.y];
+            headingVector = [cos(obj.heading), sin(obj.heading)];
+            
+            direction = sign(headingVector(1)*wpVector(2) - headingVector(2)*wpVector(1)); %Artifical 2d Curl
+            obj.turn(dt, direction, obstacle);
         end
 
         
@@ -76,7 +84,6 @@ classdef UAV < handle
             
             obj.circleStates(obstacle);
             
-            
             obj.path(:, obj.step) = [obj.x; obj.y; obj.z];
             
         end
@@ -85,7 +92,7 @@ classdef UAV < handle
             obj.x = obj.x  + dt*obj.v*cos(obj.heading);
             obj.y = obj.y + dt*obj.v*sin(obj.heading);
             obj.z = obj.z - dt*obj.v*sin(obj.flightCourseAngle);            
-            obj.heading = obj.heading + dir*(obj.v/obj.turnRadius);
+            obj.heading = obj.heading + dt*dir*(obj.v/obj.turnRadius);
             
             obj.step = obj.step + 1;
             
@@ -112,19 +119,20 @@ classdef UAV < handle
         
         function dynamicPlot2D(obj)
             plot(obj.x, obj.y, '*')
-            quiver(obj.x, obj.y, 2*cos(obj.heading), 2*sin(obj.heading), 10)
+            quiver(obj.x, obj.y, 2*cos(obj.heading), 2*sin(obj.heading), 15)
             %             t = 0:2*pi:2*pi/100;
             %             xcord = obj.turnRadius*cos(t);
             %             ycord = obj.turnRadius*sin(t);
             %             
             %             tc = [xcord, ycord] + obj.TurnCircle;
             %             oc = [xcord, ycord] + obj.OppositeCircle;
+            
             if  obj.TC && obj.OC 
                 rectangle('Position',[obj.TurnCircle(1)- obj.turnRadius, obj.TurnCircle(2) - obj.turnRadius, 2*obj.turnRadius, 2*obj.turnRadius], 'FaceColor',[0 .5 .5],'Curvature',[1,1])
                 rectangle('Position',[obj.OppositeCircle(1)- obj.turnRadius, obj.OppositeCircle(2)- obj.turnRadius, 2*obj.turnRadius, 2*obj.turnRadius],'FaceColor',[0 .5 .5], 'Curvature',[1,1])
-            elseif ~obj.TC && obj.OC && obj.SS
-                rectangle('Position',[obj.TurnCircle(1)- obj.turnRadius, obj.TurnCircle(2)- obj.turnRadius, obj.turnRadius, obj.turnRadius], 'FaceColor',[0 .1 .1],'Curvature',[1,1])
-                rectangle('Position',[obj.OppositeCircle(1)- obj.turnRadius, obj.OppositeCircle(2)- obj.turnRadius, 2*obj.turnRadius, 2*obj.turnRadius],'FaceColor',[0 .1 .1], 'Curvature',[1,1])
+            elseif  obj.TC 
+                rectangle('Position',[obj.TurnCircle(1)- obj.turnRadius, obj.TurnCircle(2)- obj.turnRadius, 2*obj.turnRadius, 2*obj.turnRadius], 'FaceColor',[0 .5 .5],'Curvature',[1,1])
+                rectangle('Position',[obj.OppositeCircle(1)- obj.turnRadius, obj.OppositeCircle(2)- obj.turnRadius, 2*obj.turnRadius, 2*obj.turnRadius], 'Curvature',[1,1])
             elseif obj.OC 
                 rectangle('Position',[obj.TurnCircle(1)- obj.turnRadius, obj.TurnCircle(2)- obj.turnRadius, 2*obj.turnRadius, 2*obj.turnRadius],'Curvature',[1,1])
                 rectangle('Position',[obj.OppositeCircle(1)- obj.turnRadius, obj.OppositeCircle(2)- obj.turnRadius, 2*obj.turnRadius, 2*obj.turnRadius], 'FaceColor',[0 .5 .5], 'Curvature',[1,1])
